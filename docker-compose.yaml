@@ -1,0 +1,60 @@
+version: "3.8"
+ 
+services: 
+  mysql:
+    container_name: mysql-con
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: "test_db"
+      MYSQL_ROOT_PASSWORD: "password"
+    ports:
+      - "3306:3306"
+    volumes:
+      - my-vol:/var/lib/mysql
+    networks:
+      - my-net
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-ppassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+ 
+  backend:
+    build:
+      context: ./server
+    container_name: backend-app
+    ports:
+      - "5000:5000"
+    networks:
+      - my-net
+    depends_on:
+      mysql:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c", "sleep 10 && node server.js"]
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://backend-app:5000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+ 
+  frontend:
+    build:
+      context: ./client
+    container_name: frontend-app
+    ports:
+      - "80:80"
+    networks:
+      - my-net
+    restart: always
+    depends_on:
+      - backend
+ 
+volumes:
+  my-vol:
+ 
+networks:
+  my-net:
