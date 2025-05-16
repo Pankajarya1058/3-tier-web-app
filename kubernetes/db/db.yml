@@ -1,0 +1,74 @@
+#============================ Persistent Volume ==========================================
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: user-management-pv
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  hostPath:
+    path: "/mnt/data/mysql"
+
+#=========================== Persistent Volume Claim =====================================      
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: user-management-pvc
+  namespace: user-management-namespace
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: manual
+
+#========================== StatefuleSet for db ==========================================       
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: user-management-statefulset
+  namespace: user-management-namespace
+spec:
+  serviceName: "user-management-db-svc"
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: user-management-mysql
+  template:
+    metadata:
+      labels:
+        app: user-management-mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:5.7
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: password
+
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: database
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: user-management-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: user-management-data
+          persistentVolumeClaim:
+            claimName: user-management-pvc
