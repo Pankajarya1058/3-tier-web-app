@@ -9,7 +9,7 @@ This is a full-stack application for managing users with a front-end built using
 - [Setup Instructions](#setup-instructions)
   - [1. Run this application through Docker](#1-Run-this-application-through-Docker)
   - [2. Run this application through Kubernetes](#2-Run-this-application-through-Kubernetes)
-- [Usage](#usage)
+- [User Management Features](User-Management-Features)
 
 
 ## Features
@@ -18,7 +18,7 @@ This is a full-stack application for managing users with a front-end built using
 - View a list of all users.
 - Edit user details.
 - Delete users.
-- 
+
 
 ## Setup Instructions
 
@@ -54,17 +54,68 @@ This is a full-stack application for managing users with a front-end built using
   ```
 
 
- - The server will run on `http://<ip-of-server>`
-  
+ - **The server will run on** `http://<ip-of-server>`
 
+<br>
 
 ### 2. Run this application through Kubernetes
 
+- **Install kubernetes and create cluster**
+  
+  In our case, we are installing [kind](https://kind.sigs.k8s.io/docs/user/quick-start#installation) cluster
 
+- **Cone this repository**
 
-## Usage
+  ```
+  git clone https://github.com/Pankajarya1058/3-tier-web-app.git
+  ```
 
-After following the setup instructions, you can access the application by navigating to `http://localhost:5000` in your web browser.
+- **Create a Secret**
+  
+  remove "password", "test_db" value according to you. If you want to go with this secret simply run below command.  
+  ```
+  kubectl create secret generic db-secret \
+  --from-literal=username=root \
+  --from-literal=password=password \
+  --from-literal=host=mysql \
+  --from-literal=database=test_db \
+  -n user-management-namespace
+  ```
+
+- **Go to inside 3-tier-web-app/kubernetes directory**
+
+  ```
+  cd 3-tier-web-app/kubernetes
+  ```
+
+- **Run all \*.yml files**
+
+  ```
+  # First, run mysql .yml files
+  kubectl apply -f kubernetes/db/db.yml
+  kubectl apply -f kubernetes/db/dbSvc.yml
+  ```
+  ```
+  # Second, run backend .yml files
+  kubectl apply -f kubernetes/backend/backend.yml
+  kubectl apply -f kubernetes/backend/backendSvc.yml
+  ```
+  ```
+  # Third, run frontend .yml files
+  kubectl apply -f kubernetes/frontend/frontend.yml
+  kubectl apply -f kubernetes/frontend/frontendSvc.yml
+  ```
+
+- **Run below command to access application through browser**
+
+  ```
+  kubectl port-forward svc/user-management-frontend-svc -n user-management-namespace --address=0.0.0.0 8080:80
+  ```
+
+- **The server will run on** `http://<ip-of-server>:8080`
+  
+<br>
+
 
 ### User Management Features:
 
