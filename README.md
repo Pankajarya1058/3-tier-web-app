@@ -94,16 +94,19 @@ This is a full-stack application for managing users with a front-end built using
 
   ```
   # First, run mysql .yml files
+  
   kubectl apply -f kubernetes/db/db.yml
   kubectl apply -f kubernetes/db/dbSvc.yml
   ```
   ```
   # Second, run backend .yml files
+  
   kubectl apply -f kubernetes/backend/backend.yml
   kubectl apply -f kubernetes/backend/backendSvc.yml
   ```
   ```
   # Third, run frontend .yml files
+  
   kubectl apply -f kubernetes/frontend/frontend.yml
   kubectl apply -f kubernetes/frontend/frontendSvc.yml
   ```
