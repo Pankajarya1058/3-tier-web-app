@@ -74,7 +74,7 @@ This is a full-stack application for managing users with a front-end built using
 
 - **Create a Secret**
   
-  remove "password", "test_db" value according to you. If you want to go with this secret simply run below command.  
+  remove *"password"*, *"test_db"* value according to you. If you want to go with this secret simply run below command.  
   ```
   kubectl create secret generic db-secret \
   --from-literal=username=root \
