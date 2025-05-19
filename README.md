@@ -6,10 +6,12 @@ This is a full-stack application for managing users with a front-end built using
 ## Table of Contents
 
 - [Features](#features)
+  
 - [Setup Instructions](#setup-instructions)
   - [1. Run this application through Docker](#1-Run-this-application-through-Docker)
   - [2. Run this application through Kubernetes](#2-Run-this-application-through-Kubernetes)
-- [User Management Features](User-Management-Features)
+    
+- [User Management Features](#User-Management-Features)
 
 
 ## Features
