@@ -31,6 +31,7 @@ This is a full-stack application for managing users with a front-end built using
 - **Install docker and docker-compose**
   
   ```
+  sudo ap-get update
   sudo apt-get install docker.io -y  
   sudo apt-get install docker-compose -y 
   ```
@@ -62,14 +63,20 @@ This is a full-stack application for managing users with a front-end built using
 
 ### 2. Run this application through Kubernetes
 
-- **Install kubernetes and create cluster**
+- **Install kubernetes, kubectl and create cluster**
   
-  In our case, we are installing [kind](https://kind.sigs.k8s.io/docs/user/quick-start#installation) cluster
+  In our case, we are installing [kind](https://kind.sigs.k8s.io/docs/user/quick-start#installation) cluster and [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
+  
 
 - **Cone this repository**
 
   ```
   git clone https://github.com/Pankajarya1058/3-tier-web-app.git
+  ```
+
+- **Create namespace**
+  ```
+  kubectl create ns user-management-namespace
   ```
 
 - **Create a Secret**
@@ -95,20 +102,20 @@ This is a full-stack application for managing users with a front-end built using
   ```
   # First, run mysql .yml files
   
-  kubectl apply -f kubernetes/db/db.yml
-  kubectl apply -f kubernetes/db/dbSvc.yml
+  kubectl apply -f db/db.yml
+  kubectl apply -f db/dbSvc.yml
   ```
   ```
   # Second, run backend .yml files
   
-  kubectl apply -f kubernetes/backend/backend.yml
-  kubectl apply -f kubernetes/backend/backendSvc.yml
+  kubectl apply -f backend/backend.yml
+  kubectl apply -f backend/backendSvc.yml
   ```
   ```
   # Third, run frontend .yml files
   
-  kubectl apply -f kubernetes/frontend/frontend.yml
-  kubectl apply -f kubernetes/frontend/frontendSvc.yml
+  kubectl apply -f frontend/frontend.yml
+  kubectl apply -f frontend/frontendSvc.yml
   ```
 
 - **Run below command to access application through browser**
